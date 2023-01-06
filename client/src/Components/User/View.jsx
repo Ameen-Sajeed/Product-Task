@@ -20,33 +20,51 @@ function View() {
         console.log(error, "erorr ocurred");
       });
   }, []);
+
+  const buyProduct = async (id) => {
+    try {
+      await axios.post(`${baseUrl}/buyProduct/${id}`).then((response) => {
+        console.log(response);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div>
       <h1 className="text-dark text-center text-4xl p-4 font-extrabold">
         Products list
       </h1>
-      <div class="flex justify-center ">
-        {forms.map((obj) => {
+      <div className="flex justify-center ">
+        {forms.map((obj, index) => {
           return (
-            <div class="rounded-lg shadow-lg bg-white max-w-sm p-2">
+            <div
+              className="rounded-lg shadow-lg bg-white max-w-sm p-2"
+              key={index}
+            >
               <a href="#!" data-mdb-ripple="true" data-mdb-ripple-color="light">
-                <img class="rounded-t-lg" src={PF + obj.Image} alt="" />
+                <img className="rounded-t-lg" src={PF + obj.Image} alt="" />
               </a>
-              <div class="p-6">
-                <h5 class="text-gray-900 text-xl font-medium mb-2">
+              <div className="p-6">
+                <h5 className="text-gray-900 text-xl font-medium mb-2">
                   {obj.ProductName}
                 </h5>
-                <p class="text-gray-700 text-base mb-4">{obj.Description}</p>
-                <p class="text-gray-700 text-base mb-4 font-semibold">
+                <p className="text-gray-700 text-base mb-4">
+                  {obj.Description}
+                </p>
+                <p className="text-gray-700 text-base mb-4 font-semibold">
                   ₹ {obj.Price}
                 </p>
-                <p class="text-gray-700 text-base mb-4 font-semibold">
+                <p className="text-gray-700 text-base mb-4 font-semibold">
                   Category : {obj.Category}
                 </p>
 
                 <button
+                  onClick={(e) => {
+                    buyProduct(obj._id);
+                  }}
                   type="button"
-                  class=" inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
+                  className=" inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
                 >
                   BUY
                 </button>

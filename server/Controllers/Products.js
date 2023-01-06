@@ -1,9 +1,5 @@
 const ProductModel = require("../Models/ProductSchema");
 
-const check = (req, res) => {
-  console.log("working");
-  res.status(200).json("sucessss");
-};
 
 /* ------------------------------ ADD PRODUCTS ------------------------------ */
 
@@ -78,10 +74,30 @@ const deleteProducts = async (req, res) => {
   }
 };
 
+/* ---------------------------- PURCHASE PRODUCTS --------------------------- */
+
+const buyProduct = async (req, res) => {
+  console.log(req.params.id);
+  try {
+    await ProductModel.updateOne(
+      { _id: req.params.id },
+      {
+        $inc: {
+          Inventory: -1,
+        },
+      }
+    );
+    res.status(200).json("Product has been purchased");
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+};
+
 module.exports = {
   addProduct,
-  check,
   viewProducts,
   updateProducts,
   deleteProducts,
+  buyProduct,
 };

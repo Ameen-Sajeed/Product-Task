@@ -6,8 +6,7 @@ import "./Side.css";
 function Sidebar() {
   const navigate = useNavigate();
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/admin/login");
+    navigate("/");
   };
 
   return (
@@ -16,20 +15,21 @@ function Sidebar() {
         Product Inventory
       </h1>
       <ul className="SidebarList">
-      {SidebarData.map((val,key)=>{
-            return <li key={key} className="row" 
-                id={window.location.pathname == val.link ? "active" :""}
-                onClick={()=>{
-                window.location.pathname= val.link
-            }}>
-                <div id="icon">{val.icon}</div>
-                <div id="title">{val.title}</div>
-
+        {SidebarData.map((val, key) => {
+          return (
+            <li
+              key={key}
+              className="row"
+              id={window.location.pathname == val.link ? "active" : ""}
+              onClick={() => {
+                window.location.pathname = val.link;
+              }}
+            >
+              <div id="icon">{val.icon}</div>
+              <div id="title">{val.title}</div>
             </li>
-            
-
-
-    })}
+          );
+        })}
       </ul>
       <div className="flex justify-center p-2">
         <button

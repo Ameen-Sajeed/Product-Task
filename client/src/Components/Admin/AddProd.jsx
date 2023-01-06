@@ -6,7 +6,7 @@ import baseUrl from "../../axios";
 
 function AddProd() {
   const notify = () =>
-    toast.success("Password Changed !", {
+    toast.success("Products Added !", {
       position: toast.POSITION.TOP_RIGHT,
     });
   const [Image, setImage] = useState("");
@@ -51,24 +51,20 @@ function AddProd() {
         Inventory: " ",
         Price: " ",
         Category: " ",
-        Image: " "
+        Image: " ",
       });
       console.log(prod);
       notify();
     });
-    // setProd({ ...prod, desc: "", image: "" });
   };
-//   useEffect(()=>{
-
-//   },[prod])
 
   return (
     <div className="">
       <ToastContainer />
       <h1 className="text-4xl font-bold p-2"> Add Products</h1>
-      <div className="block p-6 rounded-lg shadow-lg bg-white max-w-sm ">
+      <div className="block p-6 rounded-lg shadow-lg bg-white max-w-sm w-full ">
         <form>
-          <div className="form-group mb-6">
+          <div className="form-group mb-6 ">
             <label className="form-label inline-block mb-2 text-gray-700">
               Product Name
             </label>

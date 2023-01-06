@@ -29,10 +29,12 @@ function Product() {
       ...prod,
       Image: e.target.files[0],
     });
+    console.log(Image, "ddsd");
   };
 
-  const updateProduct = async (e,id) => {
-    e.preventDefault();
+  const updateProduct = async (e, id) => {
+    // e.preventDefault();
+    console.log(id);
 
     const formData = new FormData();
     for (let key in prod) {
@@ -41,7 +43,6 @@ function Product() {
 
     axios.post(`${baseUrl}/updateProduct/${id}`, formData).then((response) => {
       console.log(response);
-  
     });
   };
 
@@ -67,7 +68,17 @@ function Product() {
     window.location.reload();
   };
 
-  useEffect(() => {}, [forms]);
+  const change = (obj) => {
+    SetShowMod(true);
+    setProd({
+      ProductName: obj.ProductName,
+      Description: obj.Description,
+      Inventory: obj.Inventory,
+      Price: obj.Price,
+      Category: obj.Category,
+      Image: obj.Image,
+    });
+  };
 
   return (
     <div className=" w-full">
@@ -126,7 +137,7 @@ function Product() {
 
                     <td className="text-center p-6 ">
                       <button
-                        onClick={() => SetShowMod(true)}
+                        onClick={() => change(obj)}
                         type="button"
                         className="  inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded-full shadow-md hover:bg-blue-200 hover:shadow-lg focus:bg-purple-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-purple-800 active:shadow-lg transition duration-150 ease-in-out"
                       >
@@ -173,46 +184,57 @@ function Product() {
                     name="ProductName"
                     className="p-2"
                     placeholder="ProductName"
-                    onChange={handleChange}
+                    value={prod?.ProductName}
+                    onChange={(e) => handleChange(e)}
                     required
                   />
                   <input
                     className="p-2"
                     name="Description"
                     placeholder="Description"
-                    onChange={handleChange}
+                    value={prod?.Description}
+                    onChange={(e) => handleChange(e)}
                     required
                   />{" "}
                   <input
                     className="p-2"
                     name="Inventory"
                     type="number"
+                    value={prod?.Inventory}
                     placeholder="Inventory"
-                    onChange={handleChange}
+                    onChange={(e) => handleChange(e)}
                     required
                   />{" "}
                   <input
                     className="p-2"
                     name="Price"
                     type="number"
+                    value={prod?.Price}
                     placeholder="Price"
-                    onChange={handleChange}
+                    onChange={(e) => handleChange(e)}
                     required
                   />{" "}
                   <input
                     className="p-2"
                     name="Category"
+                    value={prod?.Category}
                     placeholder="Category"
-                    onChange={handleChange}
+                    onChange={(e) => handleChange(e)}
                     required
                   />
-                  <input
-                    className="ml-5"
-                    type="file"
-                    name="Image"
-                    id="file"
-                    onChange={fileUpload}
-                  />
+                  <div className="inline-grid">
+                    <img
+                      className="w-20 inline"
+                      src={Image ? Image : PF + prod?.Image}
+                      alt=""
+                    />
+                    <input
+                      className="ml-5"
+                      type="file"
+                      name="Image"
+                      onChange={(e) => fileUpload(e)}
+                    />
+                  </div>
                 </div>
 
                 <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
@@ -223,10 +245,11 @@ function Product() {
                   >
                     Close
                   </button>
+
                   <button
-                         onClick={(e) => {
-                            updateProduct(obj._id);
-                          }}
+                    onClick={(e) => {
+                      updateProduct(prod?._id);
+                    }}
                     className="bg-blue-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                     type="button"
                   >

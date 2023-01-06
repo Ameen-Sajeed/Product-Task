@@ -22,7 +22,7 @@ const ProductSchema = new mongoose.Schema(
       type: String,
     }, 
     Inventory:{
-        type:String,
+        type:Number,
         required:true
     }
   },
