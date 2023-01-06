@@ -6,7 +6,7 @@ import "./Side.css";
 function Sidebar() {
   const navigate = useNavigate();
   const handleLogout = () => {
-    navigate("/");
+    navigate("/admin/login");
   };
 
   return (

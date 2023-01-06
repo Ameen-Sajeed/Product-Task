@@ -15,6 +15,8 @@ function Product() {
     Image: "",
   });
 
+  useEffect(() => {}, [forms, showMOd]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setProd({
@@ -29,25 +31,28 @@ function Product() {
       ...prod,
       Image: e.target.files[0],
     });
-    console.log(Image, "ddsd");
   };
 
   const updateProduct = async (e, id) => {
     // e.preventDefault();
-    console.log(id);
+    console.log(id, "iddd");
 
     const formData = new FormData();
     for (let key in prod) {
       formData.append(key, prod[key]);
     }
 
-    axios.post(`${baseUrl}/updateProduct/${id}`, formData).then((response) => {
+    axios.put(`${baseUrl}/updateProduct/${id}`, formData).then((response) => {
       console.log(response);
+      SetShowMod(!showMOd);
     });
   };
 
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   useEffect(() => {
+    product();
+  }, [showMOd]);
+  function product() {
     axios
       .get(`${baseUrl}/viewProducts`)
       .then((response) => {
@@ -60,12 +65,11 @@ function Product() {
       .catch((error) => {
         console.log(error, "erorr ocurred");
       });
-  }, []);
-
+  }
   const delProduct = async (id) => {
-    await axios.delete(`${baseUrl}/deleteProduct/${id}`);
-    // alert("deleted");
-    window.location.reload();
+    await axios.delete(`${baseUrl}/deleteProduct/${id}`).then((res) => {
+      product();
+    });
   };
 
   const change = (obj) => {
@@ -77,6 +81,7 @@ function Product() {
       Price: obj.Price,
       Category: obj.Category,
       Image: obj.Image,
+      ProId: obj._id,
     });
   };
 
@@ -129,11 +134,17 @@ function Product() {
                     <td className="text-center p-2">
                       <img src={PF + obj.Image} className="w-20 "></img>
                     </td>
-                    <td className="text-center">{obj.Description}</td>
+                    <td className="text-center ">{obj.Description}</td>
                     <td className="text-center">{obj.Category}</td>
 
                     <td className="text-center">{obj.Price}</td>
-                    <td className="text-center">{obj.Inventory}</td>
+                    {obj.Inventory === 0 ? (
+                      <p className="text-md font-semibold text-red-700 text-center p-8">
+                        Out of Stock
+                      </p>
+                    ) : (
+                      <td className="text-center">{obj.Inventory}</td>
+                    )}
 
                     <td className="text-center p-6 ">
                       <button
@@ -245,10 +256,10 @@ function Product() {
                   >
                     Close
                   </button>
-
+                  {console.log(prod, "det")}
                   <button
                     onClick={(e) => {
-                      updateProduct(prod?._id);
+                      updateProduct(e, prod?.ProId);
                     }}
                     className="bg-blue-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                     type="button"

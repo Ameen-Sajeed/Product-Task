@@ -40,16 +40,28 @@ const viewProducts = async (req, res) => {
 /* ----------------------------- UPDATE PRODUCTS ---------------------------- */
 
 const updateProducts = async (req, res) => {
+    console.log(req.params.id,"id");
+    console.log(req.body,"data");
   try {
+    if (req.file) {
+        var file = true;
+      } else {
+        var file = false;
+      }
+    let editPro = await ProductModel.findById(req.params.id)  
     let editProduct = await ProductModel.updateOne(
       { _id: req.params.id },
       {
         $set: {
-          Price: req.body.price,
+          Price: req.body.Price,
           ProductName: req.body.ProductName,
-          Image: req.file.filename,
+          Image: file
+          ? req.file.filename
+          : editPro.Image,      
           Category: req.body.Category,
           Description: req.body.Description,
+          Inventory:req.body.Inventory
+
         },
       },
       { upsert: true }
@@ -59,6 +71,7 @@ const updateProducts = async (req, res) => {
       .status(200)
       .json({ msg: "Product Updated Succesfully", data: editProduct });
   } catch (error) {
+    console.log(error);
     res.status(500).json(error);
   }
 };
@@ -77,7 +90,6 @@ const deleteProducts = async (req, res) => {
 /* ---------------------------- PURCHASE PRODUCTS --------------------------- */
 
 const buyProduct = async (req, res) => {
-  console.log(req.params.id);
   try {
     await ProductModel.updateOne(
       { _id: req.params.id },

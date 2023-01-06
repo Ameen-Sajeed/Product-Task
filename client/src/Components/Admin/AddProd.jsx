@@ -1,23 +1,26 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import baseUrl from "../../axios";
 
 function AddProd() {
+
+    const navigate = useNavigate()
+
   const notify = () =>
     toast.success("Products Added !", {
       position: toast.POSITION.TOP_RIGHT,
     });
-  const [Image, setImage] = useState("");
-  const [prod, setProd] = useState({
-    ProductName: "",
+    const initialValues ={    ProductName: "",
     Description: "",
     Inventory: "",
     Price: "",
     Category: "",
-    Image: "",
-  });
+    Image: "",}
+  const [Image, setImage] = useState("");
+  const [prod, setProd] = useState(initialValues);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -45,15 +48,8 @@ function AddProd() {
 
     axios.post(`${baseUrl}/addProduct`, formData).then((response) => {
       console.log(response);
-      setProd({
-        ProductName: " ",
-        Description: " ",
-        Inventory: " ",
-        Price: " ",
-        Category: " ",
-        Image: " ",
-      });
-      console.log(prod);
+      setProd(initialValues);
+      navigate('/products')
       notify();
     });
   };
@@ -62,6 +58,8 @@ function AddProd() {
     <div className="">
       <ToastContainer />
       <h1 className="text-4xl font-bold p-2"> Add Products</h1>
+      <div className="flex justify-center">
+
       <div className="block p-6 rounded-lg shadow-lg bg-white max-w-sm w-full ">
         <form>
           <div className="form-group mb-6 ">
@@ -71,7 +69,7 @@ function AddProd() {
             <input
               type="text"
               className="form-control
-        block
+              block
         w-full
         px-3
         py-1.5
@@ -89,10 +87,10 @@ function AddProd() {
               placeholder="Name"
               onChange={handleChange}
               required
-            />
+              />
           </div>
           <div className="form-group mb-6">
-            <label
+              <label
               htmlFor="exampleInputPassword2"
               className="form-label inline-block mb-2 text-gray-700"
             >
@@ -196,7 +194,7 @@ function AddProd() {
         ease-in-out
         m-0
         focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-              name="Price"
+        name="Price"
               placeholder="Price"
               onChange={handleChange}
               required
@@ -210,7 +208,7 @@ function AddProd() {
             <input
               type="file"
               className="form-control block
-        w-full
+              w-full
         px-3
         py-1.5
         text-base
@@ -223,7 +221,7 @@ function AddProd() {
         ease-in-out
         m-0
         focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-              name="Image"
+        name="Image"
               placeholder="Image"
               onChange={fileUpload}
               required
@@ -250,11 +248,12 @@ function AddProd() {
       transition
       duration-150
       ease-in-out"
-            onClick={upload}
+      onClick={upload}
           >
             Add product
           </button>
         </form>
+      </div>
       </div>
     </div>
   );

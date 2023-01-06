@@ -1,8 +1,15 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import baseUrl from "../../axios";
+import './View.css'
 
 function View() {
+    const notify = () =>
+    toast.success("Product purchased !", {
+      position: toast.POSITION.TOP_RIGHT,
+    });
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const [forms, setForms] = useState([]);
 
@@ -25,21 +32,23 @@ function View() {
     try {
       await axios.post(`${baseUrl}/buyProduct/${id}`).then((response) => {
         console.log(response);
+        notify()
       });
     } catch (error) {
       console.log(error);
     }
   };
   return (
-    <div>
+    <div className="user">
+        <ToastContainer/>
       <h1 className="text-dark text-center text-4xl p-4 font-extrabold">
         Products list
       </h1>
-      <div className="flex justify-center ">
+      <div className="flex justify-evenly ">
         {forms.map((obj, index) => {
           return (
             <div
-              className="rounded-lg shadow-lg bg-white max-w-sm p-2"
+              className="rounded-lg shadow-lg bg-white max-w-xs p-2"
               key={index}
             >
               <a href="#!" data-mdb-ripple="true" data-mdb-ripple-color="light">
@@ -58,6 +67,8 @@ function View() {
                 <p className="text-gray-700 text-base mb-4 font-semibold">
                   Category : {obj.Category}
                 </p>
+{
+    obj.Inventory !== 0 ?
 
                 <button
                   onClick={(e) => {
@@ -68,6 +79,7 @@ function View() {
                 >
                   BUY
                 </button>
+                : <p className="text-lg font-semibold text-red-700">Out of Stock</p>}
               </div>
             </div>
           );
