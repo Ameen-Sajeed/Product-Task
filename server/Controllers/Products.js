@@ -87,6 +87,7 @@ const deleteProducts = async (req, res) => {
   }
 };
 
+
 /* ---------------------------- PURCHASE PRODUCTS --------------------------- */
 
 const buyProduct = async (req, res) => {

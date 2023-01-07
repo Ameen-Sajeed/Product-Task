@@ -1,11 +1,15 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import baseUrl from "../../axios";
+import { io } from 'socket.io-client'
 
 function Product() {
   const [forms, setForms] = useState([]);
   const [showMOd, SetShowMod] = useState(false);
   const [Image, setImage] = useState("");
+  const [socket, setSocket] = useState(null)
+  const [check, setCheck] = useState("")
+  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const [prod, setProd] = useState({
     ProductName: "",
     Description: "",
@@ -16,6 +20,21 @@ function Product() {
   });
 
   useEffect(() => {}, [forms, showMOd]);
+
+    // // call socket
+    useEffect(() => {
+      console.log("here");
+      setSocket(io('http://localhost:8800'))
+    }, [])
+    
+
+useEffect(()=>{
+  socket?.on('sentToAdmin',arg =>{
+    setCheck(Date.now())
+    console.log(arg,"data");
+  })
+})
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -48,10 +67,11 @@ function Product() {
     });
   };
 
-  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   useEffect(() => {
     product();
-  }, [showMOd]);
+    console.log("working");
+  }, [showMOd,socket,check]);
+  console.log(check,"sockeeettt");
   function product() {
     axios
       .get(`${baseUrl}/viewProducts`)
@@ -87,7 +107,7 @@ function Product() {
 
   return (
     <div className=" w-full">
-      <h1 className="text-5xl font-bold p-2 text-center">Products</h1>
+      <h1 className="text-5xl font-bold p-2 text-center text-blue-900">Products</h1>
 
       <div className="w-full">
         <div className="inline-block shadow rounded-lg overflow-hidden p-4 w-full">
@@ -190,25 +210,36 @@ function Product() {
                     </span>
                   </button>
                 </div>
-                <div className="relative p-6 flex-auto">
+                <div className="relative p-4 flex-auto">
+                  <label className="text-xs font-semibold text-blue-500">
+                    Product Name:
+                  </label>
                   <input
                     name="ProductName"
-                    className="p-2"
+                    className="m-6"
                     placeholder="ProductName"
                     value={prod?.ProductName}
                     onChange={(e) => handleChange(e)}
                     required
                   />
+         
+                  <label className="text-xs font-semibold text-blue-500">
+                    Description:
+                  </label>
                   <input
-                    className="p-2"
+                    className="m-4"
                     name="Description"
                     placeholder="Description"
                     value={prod?.Description}
                     onChange={(e) => handleChange(e)}
                     required
                   />{" "}
+                           <br />
+                  <label className="text-xs font-semibold text-blue-500 p-2 ">
+                    Inventory:
+                  </label>
                   <input
-                    className="p-2"
+                    className="m-6"
                     name="Inventory"
                     type="number"
                     value={prod?.Inventory}
@@ -216,26 +247,35 @@ function Product() {
                     onChange={(e) => handleChange(e)}
                     required
                   />{" "}
+                  <label className="text-xs font-semibold text-blue-500 p-2">
+                    Price:
+                  </label>
                   <input
-                    className="p-2"
+                    className=""
                     name="Price"
                     type="number"
                     value={prod?.Price}
                     placeholder="Price"
                     onChange={(e) => handleChange(e)}
                     required
-                  />{" "}
+                  />{" "}<br/>
+                  <label className="text-xs font-semibold text-blue-500 p-2">
+                    Category:
+                  </label>
                   <input
-                    className="p-2"
+                    className="m-6"
                     name="Category"
                     value={prod?.Category}
                     placeholder="Category"
                     onChange={(e) => handleChange(e)}
                     required
                   />
+                  <label className="text-xs font-semibold text-blue-500">
+                    Image:
+                  </label>
                   <div className="inline-grid">
                     <img
-                      className="w-20 inline"
+                      className="w-20 inline m-6"
                       src={Image ? Image : PF + prod?.Image}
                       alt=""
                     />

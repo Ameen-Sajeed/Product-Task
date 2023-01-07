@@ -41,7 +41,7 @@ function LoginAdmin() {
           if (data) {
             console.log(data);
             localStorage.setItem("token", data.token);
-            navigate("/");
+            navigate("/products");
           } else {
             setErrorMessage(data);
           }

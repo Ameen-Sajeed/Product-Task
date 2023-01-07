@@ -1,4 +1,5 @@
 .user {
     background-image: url('../../assets/images/pic3.webp');
     background-size: contain;
+    height: 100vh;
 }

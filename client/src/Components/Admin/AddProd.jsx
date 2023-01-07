@@ -6,19 +6,22 @@ import "react-toastify/dist/ReactToastify.css";
 import baseUrl from "../../axios";
 
 function AddProd() {
-
-    const navigate = useNavigate()
-
   const notify = () =>
     toast.success("Products Added !", {
       position: toast.POSITION.TOP_RIGHT,
     });
-    const initialValues ={    ProductName: "",
+  const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState("");
+  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+
+  const initialValues = {
+    ProductName: "",
     Description: "",
     Inventory: "",
     Price: "",
     Category: "",
-    Image: "",}
+    Image: "",
+  };
   const [Image, setImage] = useState("");
   const [prod, setProd] = useState(initialValues);
 
@@ -41,36 +44,52 @@ function AddProd() {
   const upload = async (e) => {
     e.preventDefault();
 
-    const formData = new FormData();
-    for (let key in prod) {
-      formData.append(key, prod[key]);
-    }
+    try {
+      if (!prod.ProductName) {
+        setErrorMessage("Product Name is required");
+      } else if (!prod.Category) {
+        setErrorMessage("Category is required");
+      } else if (!prod.Description) {
+        setErrorMessage("Description is required");
+      } else if (!prod.Image) {
+        setErrorMessage("Image is required");
+      } else if (!prod.Price) {
+        setErrorMessage("Price is required");
+      } else if (!prod.Inventory) {
+        setErrorMessage("Invetory is required");
+      } else {
+        const formData = new FormData();
+        for (let key in prod) {
+          formData.append(key, prod[key]);
+        }
 
-    axios.post(`${baseUrl}/addProduct`, formData).then((response) => {
-      console.log(response);
-      setProd(initialValues);
-      navigate('/products')
-      notify();
-    });
+        axios.post(`${baseUrl}/addProduct`, formData).then((response) => {
+          console.log(response);
+          setProd(initialValues);
+          navigate("/products");
+          notify();
+        });
+      }
+    } catch (error) {}
   };
 
   return (
-    <div className="">
+    <div className="w-full">
       <ToastContainer />
-      <h1 className="text-4xl font-bold p-2"> Add Products</h1>
-      <div className="flex justify-center">
-
-      <div className="block p-6 rounded-lg shadow-lg bg-white max-w-sm w-full ">
-        <form>
-          <div className="form-group mb-6 ">
-            <label className="form-label inline-block mb-2 text-gray-700">
-              Product Name
-            </label>
-            <input
-              type="text"
-              className="form-control
-              block
-        w-full
+      <h1 className="text-4xl font-bold p-3 text-blue-900 text-center">
+        {" "}
+        Add Products
+      </h1>
+      <div className="flex justify-center w-full">
+        <div className=" p-6 rounded-lg shadow-lg bg-white max-w-sm w-full flex  ">
+          <form>
+            <div className="fle">
+              <div className="form-group mb-6  ">
+                <input
+                  type="text"
+                  className="form-control
+                block
+                w-full
         px-3
         py-1.5
         text-base
@@ -83,24 +102,18 @@ function AddProd() {
         ease-in-out
         m-0
         focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-              name="ProductName"
-              placeholder="Name"
-              onChange={handleChange}
-              required
-              />
-          </div>
-          <div className="form-group mb-6">
-              <label
-              htmlFor="exampleInputPassword2"
-              className="form-label inline-block mb-2 text-gray-700"
-            >
-              Description
-            </label>
-            <input
-              type="name"
-              className="form-control block
-        w-full
-        px-3
+                  name="ProductName"
+                  placeholder="Product Name"
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="form-group mb-6 fle">
+                <input
+                  type="name"
+                  className="form-control block
+                w-full
+                px-3
         py-1.5
         text-base
         font-normal
@@ -112,21 +125,42 @@ function AddProd() {
         ease-in-out
         m-0
         focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-              name="Description"
-              placeholder="Description"
-              onChange={handleChange}
-              required
-            />
-          </div>
+                  name="Description"
+                  placeholder="Description"
+                  onChange={handleChange}
+                  required
+                />
+              </div>
 
-          <div className="form-group mb-6">
-            <label className="form-label inline-block mb-2 text-gray-700">
-              Inventory
-            </label>
-            <input
-              type="number"
-              className="form-control block
+              <div className="form-group mb-6">
+                <input
+                  type="number"
+                  className="form-control block
               
+                w-full
+                px-3
+        py-1.5
+        text-base
+        font-normal
+        text-gray-700
+        bg-white bg-clip-padding
+        border border-solid border-gray-300
+        rounded
+        transition
+        ease-in-out
+        m-0
+        focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                  name="Inventory"
+                  placeholder="Inventory"
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              <div className="form-group mb-6">
+                <input
+                  type="text"
+                  className="form-control block
         w-full
         px-3
         py-1.5
@@ -140,22 +174,19 @@ function AddProd() {
         ease-in-out
         m-0
         focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-              name="Inventory"
-              placeholder="Inventory"
-              onChange={handleChange}
-              required
-            />
-          </div>
+                  name="Category"
+                  placeholder="Category"
+                  onChange={handleChange}
+                  required
+                />
+              </div>
 
-          <div className="form-group mb-6">
-            <label className="form-label inline-block mb-2 text-gray-700">
-              Category
-            </label>
-            <input
-              type="text"
-              className="form-control block
-        w-full
-        px-3
+              <div className="form-group mb-6">
+                <input
+                  type="number"
+                  className="form-control block
+                w-full
+                px-3
         py-1.5
         text-base
         font-normal
@@ -167,22 +198,19 @@ function AddProd() {
         ease-in-out
         m-0
         focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-              name="Category"
-              placeholder="Category"
-              onChange={handleChange}
-              required
-            />
-          </div>
+                  name="Price"
+                  placeholder="Price"
+                  onChange={handleChange}
+                  required
+                />
+              </div>
 
-          <div className="form-group mb-6">
-            <label className="form-label inline-block mb-2 text-gray-700">
-              Price
-            </label>
-            <input
-              type="number"
-              className="form-control block
-        w-full
-        px-3
+              <div className="form-group mb-6">
+                <input
+                  type="file"
+                  className="form-control block
+                w-full
+                px-3
         py-1.5
         text-base
         font-normal
@@ -194,43 +222,21 @@ function AddProd() {
         ease-in-out
         m-0
         focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-        name="Price"
-              placeholder="Price"
-              onChange={handleChange}
-              required
-            />
-          </div>
+                  name="Image"
+                  placeholder="Image"
+                  onChange={fileUpload}
+                  required
+                />
+                <img
+                  className="w-20 inline m-6"
+                  src={Image ? Image : PF + prod?.Image}
+                  alt=""
+                />
+              </div>
 
-          <div className="form-group mb-6">
-            <label className="form-label inline-block mb-2 text-gray-700">
-              Image
-            </label>
-            <input
-              type="file"
-              className="form-control block
-              w-full
-        px-3
-        py-1.5
-        text-base
-        font-normal
-        text-gray-700
-        bg-white bg-clip-padding
-        border border-solid border-gray-300
-        rounded
-        transition
-        ease-in-out
-        m-0
-        focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-        name="Image"
-              placeholder="Image"
-              onChange={fileUpload}
-              required
-            />
-          </div>
-
-          <button
-            type="submit"
-            className="
+              <button
+                type="submit"
+                className="
       w-full
       px-6
       py-2.5
@@ -248,12 +254,23 @@ function AddProd() {
       transition
       duration-150
       ease-in-out"
-      onClick={upload}
-          >
-            Add product
-          </button>
-        </form>
+                onClick={upload}
+              >
+                Add product
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
+      <div className="flex justify-center">
+        {errorMessage && (
+          <div
+            className="p-2 m-4 mb-6  w-52 text-center text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800"
+            role="alert "
+          >
+            {errorMessage}
+          </div>
+        )}
       </div>
     </div>
   );
